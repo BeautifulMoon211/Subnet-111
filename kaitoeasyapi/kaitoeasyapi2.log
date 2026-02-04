@@ -1,4 +1,4 @@
-curl --location 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/run-sync-get-dataset-items?token=apify_api_AjSM4dsu9nJcODmpMKpSrNbe88k2VZ0qZnPe'   --header 'Content-Type: application/json'   --data '{
+curl --location 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/run-sync-get-dataset-items?token=apify_api_***'   --header 'Content-Type: application/json'   --data '{
     "twitterContent": "\"bitcoin\"",
     "maxItems": 200,
     "queryType": "Latest",
