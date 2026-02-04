@@ -1,0 +1,99 @@
+[{
+  "type": "tweet",
+  "id": "1846846285917131130",
+  "url": "https://x.com/elonmusk/status/1846846285917131130",
+  "twitterUrl": "https://twitter.com/elonmusk/status/1846846285917131130",
+  "text": "True",
+  "source": "Twitter for iPhone",
+  "retweetCount": 18171,
+  "replyCount": 3480,
+  "likeCount": 85815,
+  "quoteCount": 264,
+  "viewCount": 10913296,
+  "createdAt": "Thu Oct 17 09:30:41 +0000 2024",
+  "lang": "en",
+  "bookmarkCount": 1426,
+  "isReply": false,
+  "inReplyToId": null,
+  "conversationId": "1846846285917131130",
+  "inReplyToUserId": null,
+  "inReplyToUsername": null,
+  "isPinned": false,
+  "author": {
+    "type": "user",
+    "userName": "elonmusk",
+    "url": "https://x.com/elonmusk",
+    "twitterUrl": "https://twitter.com/elonmusk",
+    "id": "44196397",
+    "name": "Elon Musk",
+    "isVerified": false,
+    "isBlueVerified": true,
+    "profilePicture": "https://pbs.twimg.com/profile_images/1845482317860450309/OrD0ovmf_normal.jpg",
+    "coverPicture": "https://pbs.twimg.com/profile_banners/44196397/1726163678",
+    "description": "",
+    "location": "",
+    "followers": 201838988,
+    "following": 789,
+    "status": "",
+    "canDm": false,
+    "canMediaTag": false,
+    "createdAt": "Tue Jun 02 20:12:29 +0000 2009",
+    "entities": {
+      "description": {
+        "urls": []
+      },
+      "url": {}
+    },
+    "fastFollowersCount": 0,
+    "favouritesCount": 81519,
+    "hasCustomTimelines": true,
+    "isTranslator": false,
+    "mediaCount": 2600,
+    "statusesCount": 54477,
+    "withheldInCountries": [],
+    "affiliatesHighlightedLabel": {},
+    "possiblySensitive": false,
+    "pinnedTweetIds": [
+      "1846407354520117615"
+    ],
+    "profile_bio": {
+      "description": "Read @America to understand why I’m supporting Trump for President",
+      "entities": {
+        "description": {
+          "user_mentions": [
+            {
+              "id_str": "0",
+              "indices": [
+                5,
+                13
+              ],
+              "name": "",
+              "screen_name": "America"
+            }
+          ]
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "TheAmericaPAC.org",
+              "expanded_url": "http://TheAmericaPAC.org",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/DjyKIO6ePx"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "extendedEntities": {},
+  "card": {},
+  "place": {},
+  "entities": {},
+  "isRetweet": false,
+  "isQuote": false,
+  "media": [],
+  "isConversationControlled": false
+}]
