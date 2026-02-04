@@ -554,3 +554,5 @@ THE SOFTWARE.
 **Built with ❤️ for the Bittensor ecosystem**
 
 For support, documentation, and updates, visit [oneoneone.io](https://oneoneone.io)
+
+I, CX, decided to implement this code with scraperapi, instead of Apify and Gravity.
