@@ -1,0 +1,35 @@
+```mermaid
+sequenceDiagram
+    participant V as Validator<br/>(Python)
+    participant VN as Validator Node<br/>(Node.js)
+    participant MN as Miner Node<br/>(Node.js)
+    participant M as Miner<br/>(Python)
+    participant Apify as Apify API
+    participant Gravity as Gravity API<br/>(Macrocosmos)
+
+    Note over V,VN: 1. Create Synthetic Task
+    V->>VN: GET /create-synthetic-task
+    VN->>Apify: Search for places/keywords
+    Apify-->>VN: Return search results
+    VN-->>V: {typeId, metadata, timeout}
+
+    Note over V,M: 2. Query Miners
+    V->>M: GenericSynapse(type_id, metadata, timeout)
+    M->>MN: POST /fetch<br/>{typeId, metadata, timeout}
+    
+    alt Google Maps Reviews
+        MN->>Apify: runActorAndGetResults<br/>(placeFIDs, maxItems, language, sort)
+        Apify-->>MN: Review items array
+    else X Tweets
+        MN->>Gravity: POST OnDemandData<br/>(source, keywords, limit, keyword_mode)
+        Gravity-->>MN: Tweet items array
+    end
+    
+    MN-->>M: {status, responses, timestamp}
+    M-->>V: GenericSynapse with responses filled
+
+    Note over V,VN: 3. Score Responses
+    V->>VN: POST /score-responses<br/>{typeId, metadata, responses, responseTimes}
+    VN->>VN: Calculate scores<br/>(quality, speed, volume)
+    VN-->>V: {scores, statistics, detailedResults}
+```
