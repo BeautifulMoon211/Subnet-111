@@ -22,6 +22,7 @@ app.listen(PORT, () => {
   logger.info(`[Miner] Node running on port ${PORT}`);
   logger.info(`[Miner] Fetch endpoint: POST /fetch`);
   logger.info(`[Miner] Apify token configured: ${Boolean(process.env.APIFY_TOKEN)}`);
-  logger.info(`[Miner] Gravity API token configured: ${Boolean(process.env.GRAVITY_API_TOKEN)}`);
+  logger.info(`[Miner] Tweet scraper: KaitoEasyAPI (Apify)`);
+  logger.info(`[Miner] Tweet limit: ${process.env.GRAVITY_TWEET_LIMIT || 'not set'}`);
   logger.info('='.repeat(50));
 });
