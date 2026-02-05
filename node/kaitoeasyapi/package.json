@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "apify-client": "^2.22.0",
-    "dotenv": "^17.2.3"
-  }
-}
