@@ -1,39 +1,19 @@
 import logger from '#modules/logger/index.js';
+import apify from '#modules/apify/index.js';
+import config from '#config';
 import retryable from '#modules/retryable/index.js';
-import { ApifyClient } from 'apify-client';
+import { transformTweets } from '../transform.js';
 
 /**
- * Transform Apify tweet data to Subnet-111 format
- * @param {object} apifyTweet - Raw tweet data from Apify
- * @returns {object} - Tweet in Subnet-111 format
- */
-function transformTweetToSubnet111Format(apifyTweet) {
-  return {
-    tweetId: apifyTweet.id || String(Date.now()),
-    username: apifyTweet.author?.userName || "unknown",
-    text: apifyTweet.text || "",
-    createdAt: apifyTweet.createdAt || new Date().toISOString(),
-    tweetUrl: apifyTweet.url || `https://twitter.com/${apifyTweet.username}/status/${apifyTweet.id}`,
-    hashtags: apifyTweet.entities?.hashtags?.map(h => h.text) || [],
-    userId: apifyTweet.author?.id || "unknown",
-    displayName: apifyTweet.author?.name || "Unknown User",
-    followersCount: apifyTweet.author?.followers || 0,
-    followingCount: apifyTweet.author?.following || 0,
-    verified: apifyTweet.author?.isVerified || false,
-    userDescription: apifyTweet.author?.profile_bio?.description || apifyTweet.author?.description || ""
-  };
-}
-
-/**
- * Fetches X/Twitter tweets for a given keyword using Apify.
+ * Fetches X/Twitter tweets for a given keyword using the Apify actor.
  *
- * This function retrieves tweets for a specific keyword using the KaitoEasyAPI Apify actor.
+ * This function retrieves tweets for a specific keyword using the configured Apify actor.
  * It uses retry logic for reliability and transforms the data to Subnet-111 format.
  * The number of tweets fetched is determined by the TWEET_LIMIT environment variable.
  *
  * @example
  * ```javascript
- * const tweets = await fetchTweets({
+ * const tweets = await fetch({
  *   keyword: 'bitcoin'
  * });
  * ```
@@ -46,52 +26,35 @@ function transformTweetToSubnet111Format(apifyTweet) {
  * @description
  * - Uses retryable wrapper with up to 10 retry attempts for reliability
  * - Logs detailed information about the fetch process
- * - Tweet count is configured via TWEET_LIMIT environment variable
- * - Uses Apify actor: kaitoeasyapi/twitter-x-data-tweet-scraper-pay-per-result-cheapest
+ * - Tweet count is configured via TWEET_LIMIT environment variable or uses default
+ * - Utilizes the configured Apify actor from `config.MINER.X_TWEETS.APIFY_ACTORS.X_TWEETS`
  * - Transforms Apify response to Subnet-111 format with all 12 required fields
  */
-const fetchTweets = async ({ keyword }) => {
+const fetch = async ({ keyword }) => {
   try {
-    // Check for required environment variables
-    if (!process.env.APIFY_TOKEN) {
-      throw new Error('APIFY_TOKEN not configured');
-    }
+    // Get tweet limit from environment variable or use default from config
+    const tweetLimit = process.env.TWEET_LIMIT
+      ? Number.parseInt(process.env.TWEET_LIMIT, 10)
+      : config.MINER.X_TWEETS.DEFAULT_TWEET_LIMIT;
 
-    if (!process.env.TWEET_LIMIT) {
-      throw new Error('TWEET_LIMIT not configured');
-    }
+    logger.info(`[Miner] Fetching tweets - Keyword: ${keyword}, Limit: ${tweetLimit}`);
 
-    const tweetLimit = Number.parseInt(process.env.TWEET_LIMIT, 10);
-
-    logger.info(`[Miner] Fetching tweets using Apify - Keyword: ${keyword}, Limit: ${tweetLimit}`);
-
-    // Run the Apify scraper with retry logic
+    // Run the Apify actor and get the results
     logger.info(`[Miner] Starting Apify actor for tweets fetch...`);
     const items = await retryable(async () => {
-      // Initialize the ApifyClient
-      const client = new ApifyClient({
-        token: process.env.APIFY_TOKEN,
-      });
-
-      // Prepare Apify Actor input
-      const input = {
-        "twitterContent": keyword,
-        "lang": "en",
-        "url": "",
-        "maxItems": tweetLimit,
-        "queryType": "Latest"
-      };
-
-      // Run the Actor and wait for it to finish
-      const run = await client.actor("kaitoeasyapi/twitter-x-data-tweet-scraper-pay-per-result-cheapest").call(input);
-
-      // Fetch results from the dataset
-      const { items } = await client.dataset(run.defaultDatasetId).listItems();
+      const rawTweets = await apify.runActorAndGetResults(
+        config.MINER.X_TWEETS.APIFY_ACTORS.X_TWEETS,
+        {
+          twitterContent: keyword,
+          lang: config.MINER.X_TWEETS.DEFAULT_PARAMS.lang,
+          url: "",
+          maxItems: tweetLimit,
+          queryType: config.MINER.X_TWEETS.DEFAULT_PARAMS.queryType
+        }
+      );
 
       // Transform tweets to Subnet-111 format
-      const tweets = items.map(item => transformTweetToSubnet111Format(item));
-
-      logger.info(`[Miner] Successfully fetched ${tweets.length} tweets from Apify`);
+      const tweets = transformTweets(rawTweets);
 
       return tweets;
     }, 10);
@@ -104,5 +67,5 @@ const fetchTweets = async ({ keyword }) => {
   }
 }
 
-export default fetchTweets
+export default fetch
 

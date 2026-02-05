@@ -15,7 +15,8 @@
  */
 
 import dotenv from 'dotenv';
-import fetchTweets from './utils/miner/types/x-tweets/fetch/index.js';
+import config from './config.js';
+import fetch from './utils/miner/types/x-tweets/fetch/index.js';
 
 // Load environment variables
 dotenv.config();
@@ -51,13 +52,8 @@ if (!process.env.APIFY_TOKEN) {
 }
 
 if (!process.env.TWEET_LIMIT) {
-    console.error('❌ Error: TWEET_LIMIT not found in environment variables');
-    console.error('   Please set TWEET_LIMIT in /node/.env');
-    console.error('');
-    console.error('   Example:');
-    console.error('   echo "TWEET_LIMIT=10" >> Subnet-111/node/.env');
-    console.error('');
-    process.exit(1);
+    console.log(`⚠️  TWEET_LIMIT not set, will use default: ${config.MINER.X_TWEETS.DEFAULT_TWEET_LIMIT}`);
+    console.log('');
 }
 
 console.log('-'.repeat(80));
@@ -65,21 +61,23 @@ console.log('');
 
 async function testXTweetsFetch() {
     try {
+        const tweetLimit = process.env.TWEET_LIMIT || config.MINER.X_TWEETS.DEFAULT_TWEET_LIMIT;
+
         console.log('Test Parameters:');
         console.log(`  Keyword: ${keyword}`);
-        console.log(`  Limit: ${process.env.TWEET_LIMIT} tweets`);
+        console.log(`  Limit: ${tweetLimit} tweets`);
         console.log('');
         console.log('-'.repeat(80));
         console.log('');
-        console.log('Calling fetchTweets({ keyword })...');
+        console.log('Calling fetch({ keyword })...');
         console.log('');
         console.log('⏳ This may take 30-60 seconds depending on Apify actor speed...');
         console.log('');
-        
+
         const startTime = Date.now();
-        
-        // Call the fetchTweets function
-        const tweets = await fetchTweets({ keyword });
+
+        // Call the fetch function
+        const tweets = await fetch({ keyword });
         
         const duration = ((Date.now() - startTime) / 1000).toFixed(2);
         

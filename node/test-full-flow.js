@@ -15,7 +15,8 @@
  */
 
 import dotenv from 'dotenv';
-import fetchTweets from './utils/miner/types/x-tweets/fetch/index.js';
+import config from './config.js';
+import fetch from './utils/miner/types/x-tweets/fetch/index.js';
 
 // Load environment variables
 dotenv.config();
@@ -29,9 +30,8 @@ console.log('');
 const keyword = process.argv[2] || '"bitcoin"';
 
 // Check environment variables
-if (!process.env.APIFY_TOKEN || !process.env.TWEET_LIMIT) {
-    console.error('❌ Error: Missing environment variables');
-    console.error('   Required: APIFY_TOKEN, TWEET_LIMIT');
+if (!process.env.APIFY_TOKEN) {
+    console.error('❌ Error: Missing APIFY_TOKEN');
     console.error('   Please check /node/.env file');
     process.exit(1);
 }
@@ -55,20 +55,22 @@ async function testFullFlow() {
         console.log('');
         
         // Step 2: Extract metadata and call fetch
+        const tweetLimit = process.env.TWEET_LIMIT || config.MINER.X_TWEETS.DEFAULT_TWEET_LIMIT;
+
         console.log('Step 2: Processing Request');
         console.log('-'.repeat(80));
         console.log(`  Type ID: ${request.typeId}`);
         console.log(`  Keyword: ${request.metadata.keyword}`);
         console.log(`  Timeout: ${request.timeout}s`);
-        console.log(`  Tweet Limit: ${process.env.TWEET_LIMIT}`);
+        console.log(`  Tweet Limit: ${tweetLimit}`);
         console.log('');
         console.log('⏳ Fetching tweets from Apify...');
         console.log('');
-        
+
         const startTime = Date.now();
-        
-        // Call fetchTweets (this is what the miner does)
-        const responses = await fetchTweets(request.metadata);
+
+        // Call fetch (this is what the miner does)
+        const responses = await fetch(request.metadata);
         
         const duration = ((Date.now() - startTime) / 1000).toFixed(2);
         

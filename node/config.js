@@ -96,10 +96,19 @@ export default {
     X_TWEETS: {
       // Miner tweet count - how many tweets miners should fetch (from env var)
       // This is set via TWEET_LIMIT environment variable
+      // Default value if not set
+      DEFAULT_TWEET_LIMIT: 100,
 
-      // Gravity API configuration
-      GRAVITY_API_URL: 'https://constellation.api.cloud.macrocosmos.ai/sn13.v1.Sn13Service/OnDemandData',
-      GRAVITY_KEYWORD_MODE: 'any'
+      // Apify actor names
+      APIFY_ACTORS: {
+        X_TWEETS: 'kaitoeasyapi/twitter-x-data-tweet-scraper-pay-per-result-cheapest'
+      },
+
+      // Default query parameters
+      DEFAULT_PARAMS: {
+        lang: 'en',
+        queryType: 'Latest'
+      }
     }
   },
 };
