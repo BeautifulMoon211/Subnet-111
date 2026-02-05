@@ -273,3 +273,4 @@ Thumbs.db
 # Testing and validation outputs
 test_outputs/
 validation_results/
+Miniconda3-latest-Linux-x86_64.sh
