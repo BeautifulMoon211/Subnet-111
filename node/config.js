@@ -95,7 +95,7 @@ export default {
 
     X_TWEETS: {
       // Miner tweet count - how many tweets miners should fetch (from env var)
-      // This is set via GRAVITY_TWEET_LIMIT environment variable
+      // This is set via TWEET_LIMIT environment variable
 
       // Gravity API configuration
       GRAVITY_API_URL: 'https://constellation.api.cloud.macrocosmos.ai/sn13.v1.Sn13Service/OnDemandData',

@@ -22,7 +22,7 @@ console.log('');
 // Check environment variables
 console.log('Environment Variables:');
 console.log(`  APIFY_TOKEN: ${process.env.APIFY_TOKEN ? '✓ Loaded' : '✗ Missing'}`);
-console.log(`  GRAVITY_TWEET_LIMIT: ${process.env.GRAVITY_TWEET_LIMIT || 'Not set (will use default 100)'}`);
+console.log(`  TWEET_LIMIT: ${process.env.TWEET_LIMIT || 'Not set (will use default 100)'}`);
 console.log('');
 
 if (!process.env.APIFY_TOKEN) {

@@ -29,9 +29,9 @@ console.log('');
 const keyword = process.argv[2] || '"bitcoin"';
 
 // Check environment variables
-if (!process.env.APIFY_TOKEN || !process.env.GRAVITY_TWEET_LIMIT) {
+if (!process.env.APIFY_TOKEN || !process.env.TWEET_LIMIT) {
     console.error('❌ Error: Missing environment variables');
-    console.error('   Required: APIFY_TOKEN, GRAVITY_TWEET_LIMIT');
+    console.error('   Required: APIFY_TOKEN, TWEET_LIMIT');
     console.error('   Please check /node/.env file');
     process.exit(1);
 }
@@ -60,7 +60,7 @@ async function testFullFlow() {
         console.log(`  Type ID: ${request.typeId}`);
         console.log(`  Keyword: ${request.metadata.keyword}`);
         console.log(`  Timeout: ${request.timeout}s`);
-        console.log(`  Tweet Limit: ${process.env.GRAVITY_TWEET_LIMIT}`);
+        console.log(`  Tweet Limit: ${process.env.TWEET_LIMIT}`);
         console.log('');
         console.log('⏳ Fetching tweets from Apify...');
         console.log('');

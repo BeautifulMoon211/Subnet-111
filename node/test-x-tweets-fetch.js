@@ -31,13 +31,13 @@ const customLimit = process.argv[3];
 
 // Set custom limit if provided
 if (customLimit) {
-    process.env.GRAVITY_TWEET_LIMIT = customLimit;
+    process.env.TWEET_LIMIT = customLimit;
 }
 
 // Check environment variables
 console.log('Environment Variables:');
 console.log(`  APIFY_TOKEN: ${process.env.APIFY_TOKEN ? '✓ Loaded (' + process.env.APIFY_TOKEN.substring(0, 20) + '...)' : '✗ Missing'}`);
-console.log(`  GRAVITY_TWEET_LIMIT: ${process.env.GRAVITY_TWEET_LIMIT || '✗ Not set'}`);
+console.log(`  TWEET_LIMIT: ${process.env.TWEET_LIMIT || '✗ Not set'}`);
 console.log('');
 
 if (!process.env.APIFY_TOKEN) {
@@ -50,12 +50,12 @@ if (!process.env.APIFY_TOKEN) {
     process.exit(1);
 }
 
-if (!process.env.GRAVITY_TWEET_LIMIT) {
-    console.error('❌ Error: GRAVITY_TWEET_LIMIT not found in environment variables');
-    console.error('   Please set GRAVITY_TWEET_LIMIT in /node/.env');
+if (!process.env.TWEET_LIMIT) {
+    console.error('❌ Error: TWEET_LIMIT not found in environment variables');
+    console.error('   Please set TWEET_LIMIT in /node/.env');
     console.error('');
     console.error('   Example:');
-    console.error('   echo "GRAVITY_TWEET_LIMIT=10" >> Subnet-111/node/.env');
+    console.error('   echo "TWEET_LIMIT=10" >> Subnet-111/node/.env');
     console.error('');
     process.exit(1);
 }
@@ -67,7 +67,7 @@ async function testXTweetsFetch() {
     try {
         console.log('Test Parameters:');
         console.log(`  Keyword: ${keyword}`);
-        console.log(`  Limit: ${process.env.GRAVITY_TWEET_LIMIT} tweets`);
+        console.log(`  Limit: ${process.env.TWEET_LIMIT} tweets`);
         console.log('');
         console.log('-'.repeat(80));
         console.log('');

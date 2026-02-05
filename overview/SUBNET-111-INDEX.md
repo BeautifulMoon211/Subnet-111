@@ -142,7 +142,7 @@ POST http://localhost:3001/fetch
 ### Gravity (X Tweets)
 - **Endpoint:** `https://constellation.api.cloud.macrocosmos.ai/sn13.v1.Sn13Service/OnDemandData`
 - **Returns:** Array of tweet objects
-- **Limit:** Configurable via `GRAVITY_TWEET_LIMIT`
+- **Limit:** Configurable via `TWEET_LIMIT`
 
 ---
 
@@ -152,7 +152,7 @@ POST http://localhost:3001/fetch
 # Miner
 APIFY_TOKEN=your_apify_token
 GRAVITY_API_TOKEN=your_gravity_token
-GRAVITY_TWEET_LIMIT=100
+TWEET_LIMIT=100
 
 # Validator
 PLATFORM_TOKEN=your_platform_token

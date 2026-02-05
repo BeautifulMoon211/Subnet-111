@@ -229,7 +229,7 @@ The documentation includes **4 interactive Mermaid diagrams**:
 # Miner
 APIFY_TOKEN=your_apify_token
 GRAVITY_API_TOKEN=your_gravity_token
-GRAVITY_TWEET_LIMIT=100
+TWEET_LIMIT=100
 
 # Validator
 PLATFORM_TOKEN=your_platform_token

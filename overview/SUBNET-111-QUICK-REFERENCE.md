@@ -134,7 +134,7 @@
 ```
 
 **Configuration:**
-- Tweet limit: From `GRAVITY_TWEET_LIMIT` env var
+- Tweet limit: From `TWEET_LIMIT` env var
 - Keyword mode: "any"
 - Retry attempts: 10
 - Requires: `GRAVITY_API_TOKEN` env var
@@ -147,7 +147,7 @@
 ```bash
 APIFY_TOKEN=your_apify_token_here
 GRAVITY_API_TOKEN=your_gravity_token_here
-GRAVITY_TWEET_LIMIT=100
+TWEET_LIMIT=100
 MINER_NODE_HOST=127.0.0.1
 MINER_NODE_PORT=3001
 ```

@@ -111,7 +111,7 @@ const response = await fetch('https://constellation.api.cloud.macrocosmos.ai/sn1
   body: JSON.stringify({
     source: 'X',
     keywords: ["bitcoin"],     // Cleaned keyword (quotes removed)
-    limit: 100,                // From GRAVITY_TWEET_LIMIT env var
+    limit: 100,                // From TWEET_LIMIT env var
     keyword_mode: 'any'        // From config.MINER.X_TWEETS.GRAVITY_KEYWORD_MODE
   })
 });
@@ -122,7 +122,7 @@ const result = await response.json();
 
 **Configuration:**
 - API URL: `https://constellation.api.cloud.macrocosmos.ai/sn13.v1.Sn13Service/OnDemandData`
-- Tweet Limit: From `GRAVITY_TWEET_LIMIT` environment variable
+- Tweet Limit: From `TWEET_LIMIT` environment variable
 - Keyword Mode: `any`
 - Retry attempts: 10 (with retryable wrapper)
 
@@ -222,7 +222,7 @@ The Gravity API response is parsed to extract required fields:
       "verified": false,
       "userDescription": "Cryptocurrency enthusiast and trader"
     }
-    // ... more tweets (up to GRAVITY_TWEET_LIMIT)
+    // ... more tweets (up to TWEET_LIMIT)
   ],
   "timestamp": "2025-02-04T12:34:56.789Z"
 }
@@ -359,7 +359,7 @@ The Gravity API response is parsed to extract required fields:
 # Miner
 APIFY_TOKEN=your_apify_token
 GRAVITY_API_TOKEN=your_gravity_token
-GRAVITY_TWEET_LIMIT=100
+TWEET_LIMIT=100
 MINER_NODE_PORT=3001
 
 # Validator

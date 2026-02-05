@@ -29,7 +29,7 @@ function transformTweetToSubnet111Format(apifyTweet) {
  *
  * This function retrieves tweets for a specific keyword using the KaitoEasyAPI Apify actor.
  * It uses retry logic for reliability and transforms the data to Subnet-111 format.
- * The number of tweets fetched is determined by the GRAVITY_TWEET_LIMIT environment variable.
+ * The number of tweets fetched is determined by the TWEET_LIMIT environment variable.
  *
  * @example
  * ```javascript
@@ -46,7 +46,7 @@ function transformTweetToSubnet111Format(apifyTweet) {
  * @description
  * - Uses retryable wrapper with up to 10 retry attempts for reliability
  * - Logs detailed information about the fetch process
- * - Tweet count is configured via GRAVITY_TWEET_LIMIT environment variable
+ * - Tweet count is configured via TWEET_LIMIT environment variable
  * - Uses Apify actor: kaitoeasyapi/twitter-x-data-tweet-scraper-pay-per-result-cheapest
  * - Transforms Apify response to Subnet-111 format with all 12 required fields
  */
@@ -57,11 +57,11 @@ const fetchTweets = async ({ keyword }) => {
       throw new Error('APIFY_TOKEN not configured');
     }
 
-    if (!process.env.GRAVITY_TWEET_LIMIT) {
-      throw new Error('GRAVITY_TWEET_LIMIT not configured');
+    if (!process.env.TWEET_LIMIT) {
+      throw new Error('TWEET_LIMIT not configured');
     }
 
-    const tweetLimit = Number.parseInt(process.env.GRAVITY_TWEET_LIMIT, 10);
+    const tweetLimit = Number.parseInt(process.env.TWEET_LIMIT, 10);
 
     logger.info(`[Miner] Fetching tweets using Apify - Keyword: ${keyword}, Limit: ${tweetLimit}`);
 

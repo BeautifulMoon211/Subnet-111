@@ -84,7 +84,7 @@ async function fetch(request) {
             "twitterContent": request.metadata.keyword,
             "lang": "en",
             "url": "",
-            "maxItems": Number(process.env.GRAVITY_TWEET_LIMIT) || 100,
+            "maxItems": Number(process.env.TWEET_LIMIT) || 100,
             "queryType": "Latest"
         };
 

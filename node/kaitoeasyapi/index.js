@@ -70,7 +70,7 @@ async function fetchTweets({ keyword }) {
         const cleanKeyword = keyword.replace(/^"|"$/g, '');
         
         // Get tweet limit from environment variable
-        const tweetLimit = Number(process.env.GRAVITY_TWEET_LIMIT) || 100;
+        const tweetLimit = Number(process.env.TWEET_LIMIT) || 100;
 
         // Prepare Apify Actor input
         const input = {

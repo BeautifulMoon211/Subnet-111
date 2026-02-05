@@ -29,7 +29,7 @@ console.log('');
 const envVars = [
     'APIFY_TOKEN',
     'GRAVITY_API_TOKEN',
-    'GRAVITY_TWEET_LIMIT',
+    'TWEET_LIMIT',
     'MINER_NODE_PORT'
 ];
 

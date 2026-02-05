@@ -29,12 +29,12 @@ describe('X-Tweets Fetch', () => {
 
     // Mock environment variables
     process.env.GRAVITY_API_TOKEN = 'test-token';
-    process.env.GRAVITY_TWEET_LIMIT = '10';
+    process.env.TWEET_LIMIT = '10';
   });
 
   afterEach(() => {
     delete process.env.GRAVITY_API_TOKEN;
-    delete process.env.GRAVITY_TWEET_LIMIT;
+    delete process.env.TWEET_LIMIT;
   });
 
   describe('parseGravityResponse (tested indirectly)', () => {
@@ -248,12 +248,12 @@ describe('X-Tweets Fetch', () => {
         .toThrow('GRAVITY_API_TOKEN not configured');
     });
 
-    test('should throw error when GRAVITY_TWEET_LIMIT is missing', async () => {
-      delete process.env.GRAVITY_TWEET_LIMIT;
+    test('should throw error when TWEET_LIMIT is missing', async () => {
+      delete process.env.TWEET_LIMIT;
 
       await expect(fetchTweets({ keyword: 'bitcoin' }))
         .rejects
-        .toThrow('GRAVITY_TWEET_LIMIT not configured');
+        .toThrow('TWEET_LIMIT not configured');
     });
 
     test('should handle API error responses', async () => {
@@ -432,7 +432,7 @@ describe('X-Tweets Fetch', () => {
     });
 
     test('should handle different tweet limit values', async () => {
-      process.env.GRAVITY_TWEET_LIMIT = '50';
+      process.env.TWEET_LIMIT = '50';
 
       const mockResponse = {
         ok: true,

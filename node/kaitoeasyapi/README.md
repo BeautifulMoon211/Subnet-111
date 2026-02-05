@@ -25,7 +25,7 @@ Edit `Subnet-111/node/.env` and add/update:
 ```bash
 APIFY_TOKEN=your_apify_token_here
 GRAVITY_API_TOKEN=your_gravity_token_here
-GRAVITY_TWEET_LIMIT=10
+TWEET_LIMIT=10
 MINER_NODE_PORT=3001
 ```
 
@@ -148,7 +148,7 @@ The script loads environment variables from `Subnet-111/node/.env` file.
 |----------|----------|-------------|
 | `APIFY_TOKEN` | ✅ | Your Apify API token (loaded from /node/.env) |
 | `GRAVITY_API_TOKEN` | ❌ | Gravity API token (if needed) |
-| `GRAVITY_TWEET_LIMIT` | ❌ | Tweet limit for Gravity API |
+| `TWEET_LIMIT` | ❌ | Tweet limit for Gravity API |
 | `MINER_NODE_PORT` | ❌ | Miner node port |
 
 **Note:** The script uses `path.resolve(__dirname, '../.env')` to load the `.env` file from the parent directory (`/node/.env`).
