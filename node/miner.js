@@ -25,7 +25,6 @@ app.listen(PORT, () => {
   logger.info(`[Miner] Node running on port ${PORT}`);
   logger.info(`[Miner] Fetch endpoint: POST /fetch`);
   logger.info(`[Miner] Apify token configured: ${Boolean(process.env.APIFY_TOKEN)}`);
-  logger.info(`[Miner] Tweet scraper: ${config.MINER.X_TWEETS.APIFY_ACTORS.X_TWEETS}`);
   logger.info(`[Miner] Tweet limit: ${tweetLimit}`);
   logger.info('='.repeat(50));
 });

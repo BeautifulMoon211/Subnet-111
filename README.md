@@ -498,6 +498,74 @@ $$
 
 ## Development
 
+### Test Miner
+
+The test miner simulates the Python miner's communication with the Node.js miner, allowing you to test the data fetching pipeline without running a full validator/miner setup.
+
+#### Quick Start
+
+**Step 1: Start the Node.js miner**
+```bash
+npm run miner:start
+```
+
+**Step 2: Run the test miner**
+
+Using the interactive launcher:
+```bash
+./run_test_miner.sh
+```
+
+Or directly with command line:
+```bash
+# Test X tweets every 20 minutes
+python neurons/test_miner.py X 20
+
+# Test Google Maps every 5 minutes
+python neurons/test_miner.py GM 5
+
+# Run once for testing
+python neurons/test_miner.py X 1 --once
+```
+
+#### Parameters
+
+- **TYPE**: Job type to test
+  - `X` - X tweets
+  - `GM` - Google Maps reviews
+- **PERIOD**: Minutes between requests (must be ≥ 1)
+- **--once**: Run once and exit (optional)
+- **--host**: Node.js miner host (default: localhost)
+- **--port**: Node.js miner port (default: 3001)
+
+#### Example Output
+
+```
+============================================================
+Test Miner Started
+Job Type: X (X Tweets)
+Target: http://localhost:3001
+Period: 20 minutes
+Available test jobs: 4
+============================================================
+Starting test cycle at 2026-02-06 10:00:00
+Job Type: X
+============================================================
+Sending request #1
+  Type ID: x-tweets
+  Metadata: {'keyword': '"bitcoin"'}
+  Timeout: 120s
+✓ Success: Received 100 responses
+  Status: success
+  Timestamp: 2026-02-06 10:02:15.123
+============================================================
+Test cycle completed. Total requests sent: 1
+============================================================
+
+Waiting 20 minutes until next request...
+Next request at: 2026-02-06 10:20:00
+```
+
 ### Testing
 
 ```bash
