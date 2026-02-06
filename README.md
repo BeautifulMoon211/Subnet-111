@@ -219,7 +219,7 @@ nano node/.env
 4. Add the token to your `node/.env` file:
    ```bash
    GRAVITY_API_TOKEN=your_gravity_token_here
-   GRAVITY_TWEET_LIMIT=100
+   TWEET_LIMIT=100
    ```
 
 #### Platform Token Setup
@@ -554,3 +554,5 @@ THE SOFTWARE.
 **Built with ❤️ for the Bittensor ecosystem**
 
 For support, documentation, and updates, visit [oneoneone.io](https://oneoneone.io)
+
+I, CX, decided to implement this code with scraperapi, instead of Apify and Gravity.

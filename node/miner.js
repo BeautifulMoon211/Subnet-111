@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import logger from '#modules/logger/index.js';
+import config from '#config';
 import fetchRoute from '#routes/miner/fetch.js';
 import localhostOnly from '#modules/middlewares/localhost-only.js';
 
@@ -18,10 +19,13 @@ app.post('/fetch', fetchRoute.execute);
 
 // Start server and log configuration
 app.listen(PORT, () => {
+  const tweetLimit = process.env.TWEET_LIMIT || config.MINER.X_TWEETS.DEFAULT_TWEET_LIMIT;
+
   logger.info('='.repeat(50));
   logger.info(`[Miner] Node running on port ${PORT}`);
   logger.info(`[Miner] Fetch endpoint: POST /fetch`);
   logger.info(`[Miner] Apify token configured: ${Boolean(process.env.APIFY_TOKEN)}`);
-  logger.info(`[Miner] Gravity API token configured: ${Boolean(process.env.GRAVITY_API_TOKEN)}`);
+  logger.info(`[Miner] Tweet scraper: ${config.MINER.X_TWEETS.APIFY_ACTORS.X_TWEETS}`);
+  logger.info(`[Miner] Tweet limit: ${tweetLimit}`);
   logger.info('='.repeat(50));
 });

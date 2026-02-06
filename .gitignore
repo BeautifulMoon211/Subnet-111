@@ -56,7 +56,7 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
+# *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -273,3 +273,4 @@ Thumbs.db
 # Testing and validation outputs
 test_outputs/
 validation_results/
+Miniconda3-latest-Linux-x86_64.sh
