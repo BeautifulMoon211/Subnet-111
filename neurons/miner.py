@@ -33,6 +33,7 @@ import oneoneone
 from oneoneone.base.miner import BaseMinerNeuron
 from oneoneone.config import VALIDATOR_MIN_STAKE
 from oneoneone.utils.weight_checker import get_weight_checker
+from oneoneone.utils.apify_token_manager import get_token_manager
 
 # Environment variables for Node.js miner API connection
 MINER_NODE_HOST = os.getenv("MINER_NODE_HOST", "localhost")
@@ -64,6 +65,18 @@ class Miner(BaseMinerNeuron):
                 bt.logging.warning("Failed to fetch weights from GitHub repository")
         except Exception as e:
             bt.logging.warning(f"Error checking weights: {str(e)}")
+
+    async def _check_apify_tokens_background(self):
+        """
+        Background task to check Apify token credits and select the best one.
+        This runs after the response is sent to avoid slowing down response time.
+        """
+        try:
+            token_manager = get_token_manager()
+            best_token = await token_manager.get_current_token()
+            bt.logging.debug(f"Apify token check completed, using token: {best_token[:25]}...")
+        except Exception as e:
+            bt.logging.warning(f"Error checking Apify tokens: {str(e)}")
 
     async def forward(
         self, synapse: oneoneone.protocol.GenericSynapse
@@ -116,9 +129,11 @@ class Miner(BaseMinerNeuron):
             bt.logging.error(f"Error calling local API: {str(e)}")
             synapse.responses = []
 
-        # Check validator type weights from GitHub in background (after response is ready)
-        # This doesn't block the response from being sent back to the validator
+        # Run background tasks after response is ready (doesn't block response)
+        # 1. Check validator type weights from GitHub
         asyncio.create_task(self._check_weights_background())
+        # 2. Check Apify token credits and rotate if needed
+        asyncio.create_task(self._check_apify_tokens_background())
 
         return synapse
 
