@@ -36,17 +36,20 @@ if (customLimit) {
 }
 
 // Check environment variables
+const tokens = process.env.APIFY_TOKENS || process.env.APIFY_TOKEN;
+const tokenCount = tokens ? tokens.split(',').map(t => t.trim()).filter(t => t).length : 0;
+
 console.log('Environment Variables:');
-console.log(`  APIFY_TOKEN: ${process.env.APIFY_TOKEN ? '✓ Loaded (' + process.env.APIFY_TOKEN.substring(0, 20) + '...)' : '✗ Missing'}`);
+console.log(`  APIFY_TOKENS: ${tokens ? `✓ ${tokenCount} token(s) configured` : '✗ Missing'}`);
 console.log(`  TWEET_LIMIT: ${process.env.TWEET_LIMIT || '✗ Not set'}`);
 console.log('');
 
-if (!process.env.APIFY_TOKEN) {
-    console.error('❌ Error: APIFY_TOKEN not found in environment variables');
-    console.error('   Please set APIFY_TOKEN in /node/.env');
+if (!tokens) {
+    console.error('❌ Error: APIFY_TOKENS or APIFY_TOKEN not found in environment variables');
+    console.error('   Please set APIFY_TOKENS in /node/.env');
     console.error('');
     console.error('   Example:');
-    console.error('   echo "APIFY_TOKEN=your_token_here" >> Subnet-111/node/.env');
+    console.error('   echo "APIFY_TOKENS=token1,token2,token3" >> Subnet-111/node/.env');
     console.error('');
     process.exit(1);
 }

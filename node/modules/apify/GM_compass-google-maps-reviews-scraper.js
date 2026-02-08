@@ -2,6 +2,7 @@ import { ApifyClient } from 'apify-client';
 import dotenv from 'dotenv'
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { getCurrentToken } from './token-manager.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,10 +10,9 @@ dotenv.config({
     path: path.resolve(__dirname, '../../.env'),
 });
 
-// Initialize the ApifyClient with your Apify API token
-// Replace the '<YOUR_API_TOKEN>' with your token
+// Initialize the ApifyClient with current token from token manager
 const client = new ApifyClient({
-    token: process.env.APIFY_TOKEN,
+    token: getCurrentToken(),
 });
 
 // Prepare Actor input

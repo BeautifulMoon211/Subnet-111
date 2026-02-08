@@ -1,6 +1,6 @@
 /**
  * Apify Token Manager
- * 
+ *
  * Manages multiple Apify API tokens and automatically selects the best one
  * based on remaining credits. Rotates to another token if credits are low.
  */
@@ -10,6 +10,9 @@ import logger from '#modules/logger/index.js';
 
 const APIFY_API_BASE = 'https://api.apify.com/v2';
 const MIN_CREDITS_THRESHOLD = 0.1; // Minimum $0.1 USD credits required
+
+// Global current token - can be accessed by other modules
+let currentToken = null;
 
 class ApifyTokenManager {
   constructor(tokens) {
@@ -139,6 +142,9 @@ class ApifyTokenManager {
       this.currentToken = bestToken.token;
     }
 
+    // Update global currentToken
+    currentToken = this.currentToken;
+
     return this.currentToken;
   }
 
@@ -157,8 +163,19 @@ class ApifyTokenManager {
       return await this.selectBestToken();
     }
 
+    // Update global currentToken
+    currentToken = this.currentToken;
+
     return this.currentToken;
   }
+}
+
+/**
+ * Get the global current token (synchronous access)
+ * @returns {string|null} The current token or null if not initialized
+ */
+export function getCurrentToken() {
+  return currentToken;
 }
 
 export default ApifyTokenManager;

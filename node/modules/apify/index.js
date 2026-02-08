@@ -1,6 +1,6 @@
 import { ApifyClient } from 'apify-client';
 import logger from '#modules/logger/index.js';
-import ApifyTokenManager from './token-manager.js';
+import ApifyTokenManager, { getCurrentToken } from './token-manager.js';
 
 // Initialize token manager with tokens from environment
 let tokenManager = null;
@@ -61,5 +61,6 @@ async function runActorAndGetResults(actorId, parameters) {
 
 export default {
   runActorAndGetResults,
-  initializeTokenManager
+  initializeTokenManager,
+  getCurrentToken
 };

@@ -2,6 +2,7 @@ import logger from '#modules/logger/index.js';
 import responseService from '#modules/response/index.js';
 import time from '#modules/time/index.js';
 import Types from '#utils/miner/types/index.js';
+import apify from '#modules/apify/index.js';
 
 /**
  * Formats the successful response output for a miner fetch operation
@@ -51,11 +52,16 @@ const validate = ({ typeId, metadata, timeout }) => {
     isValid = false;
     message.error = 'timeout is required';
     message.message = 'Please provide a valid timeout';
-  } else if (!process.env.APIFY_TOKEN) {
-    logger.error(`[Miner] Error: APIFY_TOKEN not configured`);
-    isValid = false;
-    message.error = 'Configuration error';
-    message.message = 'APIFY_TOKEN not configured';
+  } else {
+    // Check if Apify tokens are configured
+    try {
+      apify.initializeTokenManager();
+    } catch (error) {
+      logger.error(`[Miner] Error: Apify tokens not configured - ${error.message}`);
+      isValid = false;
+      message.error = 'Configuration error';
+      message.message = 'APIFY_TOKENS not configured';
+    }
   }
 
   return { isValid, message };

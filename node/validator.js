@@ -34,6 +34,17 @@ app.get('/health', healthRoute.execute);
 
 // Start server and log configuration
 app.listen(PORT, () => {
+  // Check Apify token configuration
+  let apifyStatus = 'Not configured';
+  try {
+    apify.initializeTokenManager();
+    const tokens = process.env.APIFY_TOKENS || process.env.APIFY_TOKEN;
+    const tokenCount = tokens.split(',').map(t => t.trim()).filter(t => t).length;
+    apifyStatus = `${tokenCount} token(s) configured`;
+  } catch (error) {
+    apifyStatus = 'Not configured';
+  }
+
   logger.info('='.repeat(50));
   logger.info(`Node running on port ${PORT}`);
   logger.info(`Synthetic task endpoint: GET /create-synthetic-task`);
@@ -50,7 +61,7 @@ app.listen(PORT, () => {
   logger.info(`    * Count: dynamically generated`);
   logger.info(`    * Chutes model: ${config.VALIDATOR.X_TWEETS.CHUTES_MODELS}`);
   logger.info(`    * Timeout: ${config.VALIDATOR.X_TWEETS.TWEETS_SYNAPSE_PARAMS.timeout} seconds`);
-  logger.info(`  - Apify token configured: ${Boolean(process.env.APIFY_TOKEN)}`);
+  logger.info(`  - Apify tokens: ${apifyStatus}`);
   logger.info(`  - Chutes API token configured: ${Boolean(process.env.CHUTES_API_TOKEN)}`);
   logger.info(`  - Desearch API token configured: ${Boolean(process.env.DESEARCH_API_TOKEN)}`);
   logger.info(`  - Platform token configured: ${Boolean(process.env.PLATFORM_TOKEN)}`);
