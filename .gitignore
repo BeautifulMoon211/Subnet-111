@@ -273,4 +273,8 @@ Thumbs.db
 # Testing and validation outputs
 test_outputs/
 validation_results/
+<<<<<<< HEAD
+=======
+
+>>>>>>> f64ca85 (Feat: registration bot)
 Miniconda3-latest-Linux-x86_64.sh
