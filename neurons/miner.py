@@ -33,6 +33,7 @@ load_dotenv()
 import oneoneone
 from oneoneone.base.miner import BaseMinerNeuron
 from oneoneone.config import VALIDATOR_MIN_STAKE
+from oneoneone.utils.weight_checker import get_weight_checker
 
 # Environment variables for Node.js miner API connection
 MINER_NODE_HOST = os.getenv("MINER_NODE_HOST", "localhost")
@@ -142,10 +143,16 @@ class Miner(BaseMinerNeuron):
             f"Received request - type_id: {synapse.type_id}, metadata: {synapse.metadata}, timeout: {synapse.timeout}"
         )
 
-        # Fetch and display validator type weights from GitHub
-        bt.logging.info("Checking validator type weights from GitHub...")
-        weights = await fetch_validator_weights()
-        print_weight_status(weights)
+
+        # Check validator type weights from GitHub
+        try:
+            weight_checker = get_weight_checker()
+            success, weights = await weight_checker.check_and_display_weights()
+            if not success:
+                bt.logging.warning("Failed to fetch weights from GitHub repository")
+        except Exception as e:
+            bt.logging.warning(f"Error checking weights: {str(e)}")
+
 
         try:
             # Call local Node.js API using typeId endpoint
