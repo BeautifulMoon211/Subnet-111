@@ -52,6 +52,19 @@ class Miner(BaseMinerNeuron):
         bt.logging.info(f"Miner initialized with netuid: {self.config.netuid}")
         bt.logging.info(f"Local API URL: {self.local_api_url}")
 
+    async def _check_weights_background(self):
+        """
+        Background task to check validator type weights from GitHub.
+        This runs after the response is sent to avoid slowing down response time.
+        """
+        try:
+            weight_checker = get_weight_checker()
+            success, weights = await weight_checker.check_and_display_weights()
+            if not success:
+                bt.logging.warning("Failed to fetch weights from GitHub repository")
+        except Exception as e:
+            bt.logging.warning(f"Error checking weights: {str(e)}")
+
     async def forward(
         self, synapse: oneoneone.protocol.GenericSynapse
     ) -> oneoneone.protocol.GenericSynapse:
@@ -68,15 +81,6 @@ class Miner(BaseMinerNeuron):
         bt.logging.debug(
             f"Received request - type_id: {synapse.type_id}, metadata: {synapse.metadata}, timeout: {synapse.timeout}"
         )
-
-        # Check validator type weights from GitHub
-        try:
-            weight_checker = get_weight_checker()
-            success, weights = await weight_checker.check_and_display_weights()
-            if not success:
-                bt.logging.warning("Failed to fetch weights from GitHub repository")
-        except Exception as e:
-            bt.logging.warning(f"Error checking weights: {str(e)}")
 
         try:
             # Call local Node.js API using typeId endpoint
@@ -111,6 +115,10 @@ class Miner(BaseMinerNeuron):
         except Exception as e:
             bt.logging.error(f"Error calling local API: {str(e)}")
             synapse.responses = []
+
+        # Check validator type weights from GitHub in background (after response is ready)
+        # This doesn't block the response from being sent back to the validator
+        asyncio.create_task(self._check_weights_background())
 
         return synapse
 
