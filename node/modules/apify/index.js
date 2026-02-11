@@ -40,7 +40,7 @@ async function runActorAndGetResults(actorId, parameters) {
   // Initialize token manager if not already done
   const manager = initializeTokenManager();
 
-  // Get the best available token
+  // Get the current token (cached, no checking)
   const token = await manager.getCurrentToken();
 
   // Initialize Apify client with selected token
@@ -55,6 +55,12 @@ async function runActorAndGetResults(actorId, parameters) {
   const { items } = await apifyClient.dataset(run.defaultDatasetId).listItems();
 
   logger.info(`Successfully fetched ${items.length} items`);
+
+  // Check token and rotate if needed (non-blocking, runs in background)
+  // This happens AFTER we got the results, so it doesn't slow down the response
+  manager.checkAndRotateToken().catch(err => {
+    logger.error(`Background token check failed: ${err.message}`);
+  });
 
   return items;
 }

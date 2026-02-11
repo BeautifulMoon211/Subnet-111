@@ -84,8 +84,8 @@ app.listen(PORT, async () => {
     logger.info(`[Apify] Total remaining credits: $${totalRemaining.toFixed(4)}`);
     logger.info('='.repeat(70));
 
-    // Select best token
-    await tokenManager.selectBestToken();
+    // Select first available token
+    await tokenManager.getCurrentToken();
 
   } catch (error) {
     logger.error(`[Apify] Error checking tokens: ${error.message}`);

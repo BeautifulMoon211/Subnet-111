@@ -43,8 +43,8 @@ class ApifyTokenManager {
     // Cache for token credits
     this.tokenCredits = new Map();
     this.currentToken = null;
-    this.lastCheckTime = null;
-    this.checkInterval = 5 * 60 * 1000; // Check every 5 minutes
+    this.currentTokenIndex = 0; // Track which token we're currently using
+    this.failedTokens = new Set(); // Cache of tokens that failed or are depleted
   }
 
   /**
@@ -121,63 +121,120 @@ class ApifyTokenManager {
   }
 
   /**
-   * Select the best token based on remaining credits
+   * Select next available token in sequence (optimized - only checks one token at a time)
    */
-  async selectBestToken() {
-    // Check if we need to refresh token credits
-    const shouldCheck = !this.lastCheckTime || 
-                       (Date.now() - this.lastCheckTime) > this.checkInterval;
+  async selectNextToken() {
+    // Try tokens in order starting from current index
+    for (let i = this.currentTokenIndex; i < this.tokens.length; i++) {
+      const token = this.tokens[i];
 
-    if (shouldCheck || this.tokenCredits.size === 0) {
-      await this.checkAllTokens();
+      // Skip if we already know this token failed
+      if (this.failedTokens.has(token)) {
+        logger.info(`Skipping token #${i + 1} (cached as failed)`);
+        continue;
+      }
+
+      // Check only this token (not all tokens)
+      logger.info(`Checking token #${i + 1}...`);
+      const tokenInfo = await this.getTokenCredits(token);
+
+      // Update cache
+      this.tokenCredits.set(token, tokenInfo);
+      this.lastCheckTime = Date.now();
+
+      // Check if token is valid and has enough credits
+      if (tokenInfo.isValid && tokenInfo.remainingCredits >= MIN_CREDITS_THRESHOLD) {
+        // Found a good token!
+        this.currentToken = token;
+        this.currentTokenIndex = i;
+        currentToken = this.currentToken;
+
+        const tokenPreview = token.substring(0, 25) + '...';
+        logger.info(`✓ Selected token #${i + 1}: ${tokenPreview} with $${tokenInfo.remainingCredits.toFixed(4)} remaining`);
+
+        return this.currentToken;
+      } else {
+        // Token failed or depleted - cache it to avoid re-checking
+        this.failedTokens.add(token);
+
+        const tokenPreview = token.substring(0, 25) + '...';
+        if (!tokenInfo.isValid) {
+          logger.error(`✗ Token #${i + 1}: ${tokenPreview} - INVALID (cached)`);
+        } else {
+          logger.warning(`⚠ Token #${i + 1}: ${tokenPreview} - Below threshold $${tokenInfo.remainingCredits.toFixed(4)} (cached)`);
+        }
+      }
     }
 
-    // Get all valid tokens with their credits
-    const validTokens = Array.from(this.tokenCredits.values())
-      .filter(t => t.isValid)
-      .sort((a, b) => b.remainingCredits - a.remainingCredits);
+    // No valid tokens found
+    throw new Error('No valid Apify tokens available. All tokens are either invalid or below threshold.');
+  }
 
-    if (validTokens.length === 0) {
-      throw new Error('No valid Apify tokens available');
+  /**
+   * Get the current token (returns cached token, no checking)
+   */
+  async getCurrentToken() {
+    // If no token selected yet, select first available
+    if (!this.currentToken) {
+      return await this.selectNextToken();
     }
 
-    // Select token with most credits
-    const bestToken = validTokens[0];
-    const tokenPreview = bestToken.token.substring(0, 25) + '...';
-
-    if (bestToken.remainingCredits >= MIN_CREDITS_THRESHOLD) {
-      logger.info(`✓ Selected token ${tokenPreview} with $${bestToken.remainingCredits.toFixed(4)} remaining`);
-      this.currentToken = bestToken.token;
-    } else {
-      logger.warn(`⚠ All tokens below $${MIN_CREDITS_THRESHOLD} threshold. Using ${tokenPreview} with $${bestToken.remainingCredits.toFixed(4)} remaining`);
-      this.currentToken = bestToken.token;
-    }
-
-    // Update global currentToken
+    // Return cached current token (no checking)
     currentToken = this.currentToken;
-
     return this.currentToken;
   }
 
   /**
-   * Get the current best token (cached or fresh)
+   * Check current token after API call and switch if depleted
+   * This should be called AFTER sending response to validator (non-blocking)
    */
-  async getCurrentToken() {
+  async checkAndRotateToken() {
+    // If no token selected, nothing to check
     if (!this.currentToken) {
-      return await this.selectBestToken();
+      return;
     }
 
-    // Check if current token still has enough credits
-    const currentTokenInfo = this.tokenCredits.get(this.currentToken);
-    if (currentTokenInfo && currentTokenInfo.remainingCredits < MIN_CREDITS_THRESHOLD) {
-      logger.warn(`Current token below threshold ($${currentTokenInfo.remainingCredits.toFixed(4)}), selecting new token...`);
-      return await this.selectBestToken();
+    try {
+      // Check only the current token (not all tokens)
+      logger.info(`Checking current token #${this.currentTokenIndex + 1} after API call...`);
+      const tokenInfo = await this.getTokenCredits(this.currentToken);
+
+      // Update cache
+      this.tokenCredits.set(this.currentToken, tokenInfo);
+
+      // If current token is still good, keep using it
+      if (tokenInfo.isValid && tokenInfo.remainingCredits >= MIN_CREDITS_THRESHOLD) {
+        logger.info(`Current token still valid with $${tokenInfo.remainingCredits.toFixed(4)} remaining`);
+        return;
+      } else {
+        // Current token failed or depleted - cache it and move to next
+        this.failedTokens.add(this.currentToken);
+
+        const tokenPreview = this.currentToken.substring(0, 25) + '...';
+        if (!tokenInfo.isValid) {
+          logger.warning(`Current token #${this.currentTokenIndex + 1}: ${tokenPreview} - INVALID, switching to next token`);
+        } else {
+          logger.warning(`Current token #${this.currentTokenIndex + 1}: ${tokenPreview} - Below threshold $${tokenInfo.remainingCredits.toFixed(4)}, switching to next token`);
+        }
+
+        // Move to next token
+        this.currentTokenIndex++;
+        this.currentToken = null;
+
+        // Select next token (this will update currentToken)
+        await this.selectNextToken();
+      }
+    } catch (error) {
+      logger.error(`Error checking token: ${error.message}`);
     }
+  }
 
-    // Update global currentToken
-    currentToken = this.currentToken;
-
-    return this.currentToken;
+  /**
+   * Reset failed tokens cache (useful for testing or when tokens are refilled)
+   */
+  resetFailedTokens() {
+    this.failedTokens.clear();
+    logger.info('Failed tokens cache cleared');
   }
 }
 

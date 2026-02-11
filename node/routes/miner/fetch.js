@@ -3,6 +3,7 @@ import responseService from '#modules/response/index.js';
 import time from '#modules/time/index.js';
 import Types from '#utils/miner/types/index.js';
 import apify from '#modules/apify/index.js';
+import responseLogger from '#modules/response-logger/index.js';
 
 /**
  * Formats the successful response output for a miner fetch operation
@@ -109,6 +110,10 @@ const execute = async (request, response) => {
 
     // Return structured response with reviews and metadata
     const result = output({ typeId, metadata, timeout, responses });
+
+    // Log response in background (doesn't block response)
+    responseLogger.logResponseBackground(result);
+
     return responseService.success(response, result);
   } catch (error) {
     logger.error(`[Miner] Error fetching responses:`, error);
