@@ -78,6 +78,9 @@ class Miner(BaseMinerNeuron):
         Returns:
             The synapse object with responses data filled in
         """
+        # Record start time when request is received
+        start_time = time.time()
+
         bt.logging.debug(
             f"Received request - type_id: {synapse.type_id}, metadata: {synapse.metadata}, timeout: {synapse.timeout}"
         )
@@ -115,6 +118,16 @@ class Miner(BaseMinerNeuron):
         except Exception as e:
             bt.logging.error(f"Error calling local API: {str(e)}")
             synapse.responses = []
+
+        # Calculate time interval (in seconds)
+        end_time = time.time()
+        time_interval = end_time - start_time
+
+        # Print time interval after processing request
+        bt.logging.info(
+            f"⏱️  Response time: {time_interval:.3f}s for type_id: {synapse.type_id} "
+            f"({len(synapse.responses)} responses)"
+        )
 
         # Run background tasks after response is ready (doesn't block response)
         # 1. Check validator type weights from GitHub
