@@ -30,9 +30,13 @@ console.log('');
 const keyword = process.argv[2] || '"bitcoin"';
 
 // Check environment variables
-if (!process.env.APIFY_TOKEN) {
-    console.error('❌ Error: Missing APIFY_TOKEN');
+const tokens = process.env.APIFY_TOKENS || process.env.APIFY_TOKEN;
+if (!tokens) {
+    console.error('❌ Error: Missing APIFY_TOKENS or APIFY_TOKEN');
     console.error('   Please check /node/.env file');
+    console.error('');
+    console.error('   Example:');
+    console.error('   APIFY_TOKENS=token1,token2,token3');
     process.exit(1);
 }
 

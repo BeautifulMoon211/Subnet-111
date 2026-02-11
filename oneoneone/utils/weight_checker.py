@@ -90,13 +90,6 @@ class WeightChecker:
         """
         gm_weight = weights.get('GoogleMapsReviews', 0)
         x_weight = weights.get('XTweets', 0)
-        
-        print(f"{self.YELLOW}{self.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{self.RESET}")
-        print(f"{self.YELLOW}{self.BOLD}📊 VALIDATOR TYPE WEIGHTS (from GitHub){self.RESET}")
-        print(f"{self.YELLOW}{self.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{self.RESET}")
-        print(f"{self.YELLOW}  GoogleMapsReviews Weight: {self.BOLD}{gm_weight}{self.RESET}")
-        print(f"{self.YELLOW}  XTweets Weight:           {self.BOLD}{x_weight}{self.RESET}")
-        print(f"{self.YELLOW}{self.BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{self.RESET}")
     
     def check_gm_weight_alert(self, weights: Dict[str, int]) -> None:
         """

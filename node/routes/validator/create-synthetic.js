@@ -3,6 +3,7 @@ import time from '#modules/time/index.js';
 import logger from '#modules/logger/index.js';
 import retryable from '#modules/retryable/index.js';
 import Types from '#utils/validator/types/index.js';
+import apify from '#modules/apify/index.js';
 
 /**
  * Output the result of the create synthetic task route
@@ -31,13 +32,15 @@ const validate = () => {
   let isValid = true;
   let message = {};
 
-  // Validate Apify token for place search
-  if (!process.env.APIFY_TOKEN) {
-    logger.error(`APIFY_TOKEN not configured`);
+  // Validate Apify tokens
+  try {
+    apify.initializeTokenManager();
+  } catch (error) {
+    logger.error(`Apify tokens not configured - ${error.message}`);
     isValid = false;
     message = {
       error: 'Configuration error',
-      message: 'APIFY_TOKEN not configured'
+      message: 'APIFY_TOKENS not configured'
     }
   }
 

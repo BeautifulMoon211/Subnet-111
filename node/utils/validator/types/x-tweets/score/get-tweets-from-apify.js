@@ -21,14 +21,16 @@ function parseApifyResponse(items) {
 }
 
 /**
- * Get tweets from Desearch API
+ * Get tweets from Apify API
  * @param {Array} tweetIds - Array of tweet IDs to fetch
- * @returns {Promise<Array>} Array of tweets from Desearch API with retry logic
+ * @returns {Promise<Array>} Array of tweets from Apify API with retry logic
  */
 const getTweetsFromApify = async (tweetIds) => {
-  // Check if API token is configured
-  if (!process.env.APIFY_TOKEN) {
-    throw new Error('APIFY_TOKEN not configured');
+  // Check if Apify tokens are configured
+  try {
+    apify.initializeTokenManager();
+  } catch (error) {
+    throw new Error(`Apify tokens not configured: ${error.message}`);
   }
 
   const items = await retryable(async () => {
