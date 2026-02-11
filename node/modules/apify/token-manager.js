@@ -7,9 +7,20 @@
 
 import axios from 'axios';
 import logger from '#modules/logger/index.js';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({
+    path: path.resolve(__dirname, '../../.env'),
+});
 
 const APIFY_API_BASE = 'https://api.apify.com/v2';
-const MIN_CREDITS_THRESHOLD = 0.1; // Minimum $0.1 USD credits required
+const MIN_CREDITS_THRESHOLD = process.env.TWEET_LIMIT
+      ? (Number.parseInt(process.env.TWEET_LIMIT, 10) + 100) * 0.00025
+      : 0.1; // Minimum $0.1 USD credits required
 
 // Global current token - can be accessed by other modules
 let currentToken = null;
