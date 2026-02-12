@@ -30,7 +30,7 @@ from oneoneone import __spec_version__ as spec_version
 
 class BaseNeuron(ABC):
     """
-    Base class for Bittensor miners. This class is abstract and should be inherited by a subclass. It contains the core logic for all neurons; validators and miners.
+    Base class for Bittensor miners. This class is abstract and should be inherited by a subclass. It contains the core logic for all neurons.
 
     In addition to creating a wallet, subtensor, and metagraph, this class also handles the synchronization of the network state via a basic checkpointing mechanism based on epoch length.
     """
@@ -104,9 +104,9 @@ class BaseNeuron(ABC):
 
     def sync(self):
         """
-        Wrapper for synchronizing the state of the network for the given miner or validator.
+        Wrapper for synchronizing the state of the network for the given miner.
         """
-        # Ensure miner or validator hotkey is still registered on the network.
+        # Ensure miner hotkey is still registered on the network.
         self.check_registered()
 
         if self.should_sync_metagraph():
