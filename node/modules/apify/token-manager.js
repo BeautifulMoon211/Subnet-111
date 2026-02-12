@@ -22,9 +22,6 @@ const MIN_CREDITS_THRESHOLD = process.env.TWEET_LIMIT
       ? (Number.parseInt(process.env.TWEET_LIMIT, 10) + 100) * 0.00025
       : 0.1; // Minimum $0.1 USD credits required
 
-// Global current token - can be accessed by other modules
-let currentToken = null;
-
 class ApifyTokenManager {
   constructor(tokens) {
     // Parse tokens from comma-separated string or array

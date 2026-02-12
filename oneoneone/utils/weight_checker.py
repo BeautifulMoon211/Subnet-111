@@ -27,10 +27,6 @@ class WeightChecker:
     RESET = '\033[0m'
     BOLD = '\033[1m'
     
-    def __init__(self):
-        self.last_gm_weight: Optional[int] = None
-        self.last_x_weight: Optional[int] = None
-    
     async def fetch_weights_from_github(self) -> Optional[Dict[str, int]]:
         """
         Fetch the weights from GitHub repository.
@@ -127,10 +123,6 @@ class WeightChecker:
         
         # Check and alert for GM weight
         self.check_gm_weight_alert(weights)
-        
-        # Store for future reference
-        self.last_gm_weight = weights.get('GoogleMapsReviews')
-        self.last_x_weight = weights.get('XTweets')
         
         return True, weights
 
