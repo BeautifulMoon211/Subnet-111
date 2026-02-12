@@ -34,7 +34,7 @@ app.listen(PORT, async () => {
     const tokens = process.env.APIFY_TOKENS || process.env.APIFY_TOKEN;
 
     if (!tokens) {
-      logger.ing('[Apify] No tokens configured');
+      logger.warning('[Apify] No tokens configured');
       logger.info('='.repeat(70));
       return;
     }

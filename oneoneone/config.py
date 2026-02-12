@@ -20,14 +20,5 @@
 Shared configuration settings for oneoneone subnet components
 """
 
-# Timeout configurations (in seconds)
-VALIDATOR_API_TIMEOUT = 180  # Timeout for calls to validator Node.js API (allows for retries and processing)
-
-# Miner selection configuration
-MAX_MINER_COUNT = 100  # Maximum number of miners to query in each validation round
-
-# Timing configurations
-SYNAPSE_WAIT_TIME = 60 * 20  # Time to wait between validator forward passes (seconds)
-
 # Validator minimum stake
 VALIDATOR_MIN_STAKE = 1.024e3 * 25
