@@ -42,10 +42,6 @@ const input = {
     "url": ""
 };
 
-// const input = {
-//     "twitterContent": "from:elonmusk make -\"live laugh love\""
-// };
-
 // Run the Actor and wait for it to finish
 const run = await client.actor("kaitoeasyapi/twitter-x-data-tweet-scraper-pay-per-result-cheapest").call(input);
 
